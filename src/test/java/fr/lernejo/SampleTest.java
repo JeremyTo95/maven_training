@@ -2,25 +2,35 @@ package fr.lernejo;
 
 import org.junit.jupiter.api.Test;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class SampleTest {
     private Sample sample = new Sample();
 
-    @Test
-    void addition_test() {
-        int a = 3;
-        int b = 5;
+    @ParameterizedTest
+    @CsvSource({
+        "3, 7, 10",
+        "0, 3, 3",
+    })
+    void addition_test(int a, int b, int expectedResult) {
         int s = sample.op(Sample.Operation.ADD, a, b);
-
-        Assertions.assertThat(s).as(a + " x " + b).isEqualTo(8);
+        Assertions.assertThat(s).isEqualTo(expectedResult);
     }
 
     @Test
-    void multi_test() {
-        int a = 3;
-        int b = 5;
+    void op_throws_if_operation_is_null() {
+        Assertions.assertThatExceptionOfType(NullPointerException.class).isThrownBy(() -> sample.op(null, 1, 3));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        "0, 3, 0",
+        "3, 3, 9"
+    })
+    void multi_test(int a, int b, int expectedResult) {
         int s = sample.op(Sample.Operation.MULT, a, b);
 
-        Assertions.assertThat(s).as(a + " + " + b).isEqualTo(15);
+        Assertions.assertThat(s).isEqualTo(expectedResult);
     }
 }
